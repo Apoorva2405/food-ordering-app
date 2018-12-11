@@ -14,7 +14,10 @@ class Home extends Component {
             avgPrice : "" ,
             numberUsersRated : "" ,
             address : "" ,
-            categories : []
+            categories : [],
+            data : {
+                id : ""
+            }
         }
     }
     
@@ -29,13 +32,11 @@ class Home extends Component {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({
-                    id : this.response.id ,
-                    restaurantName: this.response.restaurantName
+                    data : JSON.parse(this.responseText) 
                  
                 });
-
-                console.log(this.responseText.restaurantName);
-
+                
+                console.log( JSON.parse(this.responseText) ) ;
              }
         });
 
@@ -50,7 +51,7 @@ class Home extends Component {
             <div className="home">
                 <Header />
                 HURRAY
-                {this.state.id}
+                {this.state.data}
             </div>
         ) }
 
