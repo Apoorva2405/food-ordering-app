@@ -229,11 +229,9 @@ class Details extends Component {
     }
 
     onClickCheckoutButton = state => () => {
-        this.setState({ open: true, ...state });
-        this.props.history.push({
-            pathname: '/checkout',
-            orderSummary: this.state
-        })
+        // this.setState({ open: true, ...state });
+       
+
     };
 
     handleClose = () => {
