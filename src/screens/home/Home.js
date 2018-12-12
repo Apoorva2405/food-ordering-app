@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import './Home.css';
 import Header from '../../common/header/Header';
 import { GridListTile, Typography } from '@material-ui/core';
@@ -6,6 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import GridList from '@material-ui/core/GridList';
 import { withStyles } from '@material-ui/core/styles';
+import Details from '../details/Details';
 
 const styles = theme => ({
     root: {
@@ -75,13 +77,22 @@ class Home extends Component {
                 that.setState({
                     restaurantList : JSON.parse(this.responseText)             
                 });
-                               
+
                 console.log( JSON.parse(this.responseText) ) ;            
              }
         });
 
         xhr.open("GET", "http://localhost:8080/api/restaurant");
         xhr.send(data);
+    }
+
+    showRestaurantDetails(restaurantId)
+    {
+        console.log(restaurantId);
+        console.log({restaurantId});
+        //console.log({this.restaurantId});
+
+        ReactDOM.render(<Details   id={restaurantId}  />, document.getElementById('root'));
     }
 
 
