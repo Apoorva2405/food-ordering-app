@@ -16,55 +16,75 @@ import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import ProfileIcon from '@material-ui/icons/AccountCircle';
+import Home from '../../screens/home/Home';
+import ReactDOM from 'react-dom';
 import './Header.css';
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-  menuroot: {
-    display: 'flex',
-  },
-  profileicon: {
-    marginRight: theme.spacing.unit,
-    fontSize: 20,
-
-},
-  search: {
-    position: 'relative',
-    borderRadius: '4px',
-    backgroundColor: '#263238',
-    width: '300px',
-    left: '36%',
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 6,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#fff',
-  },
-  inputRoot: {
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 5,
-    color:'#fff',
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 250,
-      '&:focus': {
-        width: 250,
-      },
+    root: {
+        width: '100%',
     },
-  },
+    menuroot: {
+        display: 'flex',
+    },
+
+    profileicon: {
+        marginRight: theme.spacing.unit,
+        fontSize: 20,
+
+    },
+    search: {
+        position: 'relative',
+        borderRadius: '4px',
+        backgroundColor: '#263238',
+        width: '300px',
+        left: '36%',
+    },
+    searchIcon: {
+        width: theme.spacing.unit * 6,
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+    },
+    inputRoot: {
+        width: '100%',
+    },
+    inputInput: {
+        paddingTop: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 5,
+        color: '#fff',
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: 250,
+            '&:focus': {
+                width: 250,
+            },
+        },
+    },
+    iconbtn: {
+        marginRight: 2,
+        marginLeft: 10,
+    },
+    profileiconbtn: {
+        //marginLeft: '66%',
+    },
+    avatar: {
+        width: 24,
+        height: 24,
+    },
+    menuList: {
+        backgroundColor: '#c0c0c0',
+    },
+    menuitem: {
+        padding: '8px',
+    },
 });
 
 const customStyles = {
@@ -78,15 +98,15 @@ const customStyles = {
 };
 
 const theme = createMuiTheme({
-  palette: {
-    primary: { main: '#263238' }, // For header background.
-    secondary: { main: '#fff' }, // For text on header. 
-  },
+    palette: {
+        primary: { main: '#263238' }, // For header background.
+        secondary: { main: '#fff' }, // For text on header. 
+    },
 });
 
 const TabContainer = function (props) {
     return (
-        <Typography component="div" style={{ paddingLeft: '10%', textAlign: 'left'}}>
+        <Typography component="div" style={{ paddingLeft: '10%', textAlign: 'left' }}>
             {props.children}
         </Typography>
     )
@@ -97,178 +117,236 @@ TabContainer.propTypes = {
 
 /*Header component for all screens */
 class Header extends Component {
-    
-    constructor(){
-    super();
-    this.state = {
-        modalIsOpen: false,
-        value: 0,
-        contactNoRequired: "dispNone",
-        contactNo: "",
-        loginPasswordRequired: "dispNone",
-        loginPassword: "",
-        firstnameRequired: "dispNone",
-        firstname: "",
-        lastnameRequired: "dispNone",
-        lastname: "",
-        emailRequired: "dispNone",
-        email: "",
-        registerPasswordRequired: "dispNone",
-        registerPassword: "",
-        contactRequired: "dispNone",
-        contact: "",
-        query: "",
-        accessToken: {},
+
+    constructor() {
+        super();
+        this.state = {
+            modalIsOpen: false,
+            value: 0,
+            contactNoRequired: "dispNone",
+            contactNo: "",
+            loginPasswordRequired: "dispNone",
+            loginPassword: "",
+            firstnameRequired: "dispNone",
+            firstname: "",
+            lastnameRequired: "dispNone",
+            lastname: "",
+            emailRequired: "dispNone",
+            email: "",
+            registerPasswordRequired: "dispNone",
+            registerPassword: "",
+            contactRequired: "dispNone",
+            contact: "",
+            query: "",
+            loggedIn: false,
+            accessToken: {},
+            open: false,
+        };
+    }
+
+    inputChangeHandler = (e) => {
+        sessionStorage.removeItem("query");
+        sessionStorage.setItem("query", e.target.value);
+        this.setState({
+            query: e.target.value
+        });
+        this.props.searchClickHandler(e.target.value);
     };
-}
 
-inputChangeHandler = (e) => {
-    sessionStorage.removeItem("query");
-    sessionStorage.setItem("query",e.target.value);
-    this.setState({
-      query: e.target.value
-    });
-    this.props.searchClickHandler(e.target.value) ;
-  };
+    loginClickHandler = () => {
+        this.state.contactNo === "" ? this.setState({ contactNoRequired: "dispBlock" }) : this.setState({ contactNoRequired: "dispNone" });
+        this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
+        // If Username & Password not null then only send the request
+        if (this.state.contactNoRequired === "dispNone" && this.state.loginPasswordRequired === "dispNone") {
+            let xhr = new XMLHttpRequest();
+            let that = this;
+            var accessToken = "";
 
-loginClickHandler = () => {
-    this.state.contactNo === "" ? this.setState({ contactNoRequired: "dispBlock" }) : this.setState({ contactNoRequired: "dispNone" });
-    this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
-}
- inputcontactNoChangeHandler = (e) => {
-    this.state.contactNo === "" ? this.setState({ contactNoRequired: "dispBlock" }) : this.setState({ contactNoRequired: "dispNone" });
-    this.setState({ contactNo: e.target.value })
-}
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
 
-registerClickHandler = () => {
-    this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
-    this.state.lastname === "" ? this.setState({ lastnameRequired: "dispBlock" }) : this.setState({ lastnameRequired: "dispNone" });
-    this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
-    this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock" }) : this.setState({ registerPasswordRequired: "dispNone" });
-    this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
-}
+                    sessionStorage.setItem('access-token', xhr.getResponseHeader("access-token"));
+                    console.log(JSON.parse(xhr.responseText));
+                    console.log(xhr.getResponseHeader("access-token"));
+                    that.setState({
+                        loggedIn: true
+                    });
+                    that.closeModalHandler();
+                    ReactDOM.render(<Home />, document.getElementById('root'));
+                }
+            });
 
-inputLoginPasswordChangeHandler = (e) => {
-    this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
-    this.setState({ loginPassword: e.target.value })
-}
 
-inputFirstNameChangeHandler = (e) => {
-    this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
-    this.setState({ firstname: e.target.value });
-}
+            xhr.open("POST", "http://localhost:8080//api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
+            xhr.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
+            xhr.send();
+        }
+    }
+    inputcontactNoChangeHandler = (e) => {
+        this.state.contactNo === "" ? this.setState({ contactNoRequired: "dispBlock" }) : this.setState({ contactNoRequired: "dispNone" });
+        this.setState({ contactNo: e.target.value })
+    }
 
-inputLastNameChangeHandler = (e) => {
-    this.state.lastname === "" ? this.setState({ lastnameRequired: "dispBlock" }) : this.setState({ lastnameRequired: "dispNone" });
-    this.setState({ lastname: e.target.value });
-}
+    registerClickHandler = () => {
+        this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
+        this.state.lastname === "" ? this.setState({ lastnameRequired: "dispBlock" }) : this.setState({ lastnameRequired: "dispNone" });
+        this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
+        this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock" }) : this.setState({ registerPasswordRequired: "dispNone" });
+        this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
+    }
 
-inputEmailChangeHandler = (e) => {
-    this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
-    this.setState({ email: e.target.value });
-}
+    inputLoginPasswordChangeHandler = (e) => {
+        this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
+        this.setState({ loginPassword: e.target.value })
+    }
 
-inputRegisterPasswordChangeHandler = (e) => {
-    this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock" }) : this.setState({ registerPasswordRequired: "dispNone" });
-    this.setState({ registerPassword: e.target.value });
-}
+    inputFirstNameChangeHandler = (e) => {
+        this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
+        this.setState({ firstname: e.target.value });
+    }
 
-inputContactChangeHandler = (e) => {
-    this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
-    this.setState({ contact: e.target.value });
-}
+    inputLastNameChangeHandler = (e) => {
+        this.state.lastname === "" ? this.setState({ lastnameRequired: "dispBlock" }) : this.setState({ lastnameRequired: "dispNone" });
+        this.setState({ lastname: e.target.value });
+    }
 
-tabChangeHandler = (event, value) => {
-    this.state = {
-        contactNoRequired: "dispNone",
-        contactNo: "",
-        loginPasswordRequired: "dispNone",
-        loginPassword: "",
-        firstnameRequired: "dispNone",
-        firstname: "",
-        lastnameRequired: "dispNone",
-        lastname: "",
-        emailRequired: "dispNone",
-        email: "",
-        registerPasswordRequired: "dispNone",
-        registerPassword: "",
-        contactRequired: "dispNone",
-        contact: "",
+    inputEmailChangeHandler = (e) => {
+        this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
+        this.setState({ email: e.target.value });
+    }
+
+    inputRegisterPasswordChangeHandler = (e) => {
+        this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock" }) : this.setState({ registerPasswordRequired: "dispNone" });
+        this.setState({ registerPassword: e.target.value });
+    }
+
+    inputContactChangeHandler = (e) => {
+        this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
+        this.setState({ contact: e.target.value });
+    }
+
+    tabChangeHandler = (event, value) => {
+        this.state = {
+            contactNoRequired: "dispNone",
+            contactNo: "",
+            loginPasswordRequired: "dispNone",
+            loginPassword: "",
+            firstnameRequired: "dispNone",
+            firstname: "",
+            lastnameRequired: "dispNone",
+            lastname: "",
+            emailRequired: "dispNone",
+            email: "",
+            registerPasswordRequired: "dispNone",
+            registerPassword: "",
+            contactRequired: "dispNone",
+            contact: "",
+        };
+        this.setState({ value });
+    }
+
+    /**
+ * Toggle Handler
+ */
+    handleToggle = () => {
+        this.setState(state => ({ open: !state.open }));
     };
-    this.setState({ value });
-}
 
-openModalHandler = () => {
-    this.setState({
-        modalIsOpen: true,
-        value: 0,
-        contactNoRequired: "dispNone",
-        contactNo: "",
-        loginPasswordRequired: "dispNone",
-        loginPassword: "",
-        firstnameRequired: "dispNone",
-        firstname: "",
-        lastnameRequired: "dispNone",
-        lastname: "",
-        emailRequired: "dispNone",
-        email: "",
-        registerPasswordRequired: "dispNone",
-        registerPassword: "",
-        contactRequired: "dispNone",
-        contact: ""
-    });
-}
-closeModalHandler = () =>{
-    this.setState({modalIsOpen: false})
-}
+    /**
+     * Handler for Closing Menu
+     */
+    handleClose = event => {
+        if (this.anchorEl.contains(event.target)) {
+            return;
+        }
 
-  render() {
-    const { classes } = this.props;
+        this.setState({ open: false });
 
-    return (
-      <div>
-        <header >
-          {<div className={classes.root}>
-              <MuiThemeProvider theme={theme}>
-                <AppBar position="static" color='primary'>
-                  <Toolbar>
-                  <img src={logo} alt="FoodOrderingApp" />
-                  
-                    <div className={classes.search}>
-                      <div className={classes.searchIcon}>
-                        <SearchIcon />
-                      </div>
-                      {/**Search Code */}
-                      <Input
-                        placeholder="Search by Restaurant Name"
-                        classes={{
-                          root: classes.inputRoot,
-                          input: classes.inputInput,
-                        }} onChange={this.inputChangeHandler} 
-                      />
+    };
+
+    logoutHandler = event => {
+        // Removing accesstoken in session storage on clicking logout 
+        sessionStorage.removeItem("access-token");
+
+        this.setState({
+            loggedIn: false
+        });
+
+    }
+
+    openModalHandler = () => {
+        this.setState({
+            modalIsOpen: true,
+            value: 0,
+            contactNoRequired: "dispNone",
+            contactNo: "",
+            loginPasswordRequired: "dispNone",
+            loginPassword: "",
+            firstnameRequired: "dispNone",
+            firstname: "",
+            lastnameRequired: "dispNone",
+            lastname: "",
+            emailRequired: "dispNone",
+            email: "",
+            registerPasswordRequired: "dispNone",
+            registerPassword: "",
+            contactRequired: "dispNone",
+            contact: ""
+        });
+    }
+    closeModalHandler = () => {
+        this.setState({
+            modalIsOpen: false,
+        })
+    }
+
+    render() {
+        const { classes } = this.props;
+        const { open } = this.state;
+        return (
+            <div>
+                <header >
+                    <div className={classes.root}>
+                        <MuiThemeProvider theme={theme}>
+                            <AppBar position="static" color='primary'>
+                                <Toolbar>
+                                    <img src={logo} alt="FoodOrderingApp" />
+
+                                    <div className={classes.search}>
+                                        <div className={classes.searchIcon}>
+                                            <SearchIcon />
+                                        </div>
+                                        {/**Search Code */}
+                                        <Input
+                                            placeholder="Search by Restaurant Name"
+                                            classes={{
+                                                root: classes.inputRoot,
+                                                input: classes.inputInput,
+                                            }} onChange={this.inputChangeHandler}
+                                        />
+                                    </div>
+                                    <div className="login-button">
+                                        <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
+                                            <ProfileIcon className={classes.prfileicon} />
+                                            Login
+                                        </Button>
+                                    </div>
+                                </Toolbar>
+                            </AppBar>
+                        </MuiThemeProvider>
                     </div>
-                    <div className="login-button">
-                        <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
-                        <ProfileIcon className={classes.prfileicon}/>
-                        Login
-                        </Button>
-                    </div>
-                  </Toolbar>
-                </AppBar>
-              </MuiThemeProvider>
-            </div>}
-        </header>
-        <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel='Login'
-                onRequestClose={this.closeModalHandler}
-                style={customStyles}>
-                <Tabs value={this.state.value} onChange={this.tabChangeHandler} className="tabs">
+                </header>
+                <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel='Login'
+                    onRequestClose={this.closeModalHandler}
+                    style={customStyles}>
+                    <Tabs value={this.state.value} onChange={this.tabChangeHandler} className="tabs">
                         <Tab label="LOGIN" />
                         <Tab label="SIGNUP" />
-                </Tabs>
-                {this.state.value === 0 &&
+                    </Tabs>
+                    {this.state.value === 0 &&
                         <TabContainer>
                             <FormControl required>
-                            <InputLabel htmlFor="contactNo">Contact No.</InputLabel>
+                                <InputLabel htmlFor="contactNo">Contact No.</InputLabel>
                                 <Input id="contactNo" type="text" contact={this.state.contactNo} onChange={this.inputcontactNoChangeHandler} />
                                 <FormHelperText className={this.state.contactNoRequired}>
                                     <span className="red">required</span>
@@ -333,9 +411,9 @@ closeModalHandler = () =>{
                     }
 
                 </Modal>
-      </div>
-    )
-  }
+            </div>
+        )
+    }
 }
 
 export default withStyles(styles)(Header);
