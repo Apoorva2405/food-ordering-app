@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import GridList from '@material-ui/core/GridList';
 import { withStyles } from '@material-ui/core/styles';
 import Details from '../details/Details';
+//import '../node_modules/font-awesome/css/font-awesome.min.css'; 
 
 const styles = theme => ({
     root: {
@@ -101,7 +102,6 @@ class Home extends Component {
         return (
             <div className="home">
                 <Header />
-                HURRAY
                 {this.state.restaurantList.map((pic,index) => ( console.log(pic.restaurantName)  ))}
 
 
@@ -119,8 +119,11 @@ class Home extends Component {
                                             </Typography>
                                             <p>{restaurant.categories}</p>
                                             <div>
-                                                <span className="rating">{restaurant.userRating} ({restaurant.numberUsersRated})</span>
-                                                <span>{restaurant.avgPrice * 2} for two</span>
+                                               
+                                                <span className="rating"> {restaurant.userRating} ({restaurant.numberUsersRated})</span>
+                                                <span> <i className="fa fa-inr" aria-hidden="true"> </i>
+                                                  {restaurant.avgPrice * 2} for two</span>
+                                                <span> <i className="fa fa-star" aria-hidden="true"></i>  </span>
                                             </div>
                                         </Typography>
                                     </CardContent>
