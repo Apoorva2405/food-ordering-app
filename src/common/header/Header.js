@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import ProfileIcon from '@material-ui/icons/AccountCircle';
 import Home from '../../screens/home/Home';
+import Snackbar from '@material-ui/core/Snackbar';
 import ReactDOM from 'react-dom';
 import './Header.css';
 
@@ -139,8 +140,11 @@ class Header extends Component {
             contact: "",
             query: "",
             loggedIn: false,
+            registrationSuccess: false,
+            message: "",
             accessToken: {},
             open: false,
+            snackbarOpen: false,
         };
     }
 
@@ -163,13 +167,15 @@ class Header extends Component {
             var accessToken = "";
 
             xhr.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200 ) {
 
                     sessionStorage.setItem('access-token', xhr.getResponseHeader("access-token"));
                     console.log(JSON.parse(xhr.responseText));
                     console.log(xhr.getResponseHeader("access-token"));
                     that.setState({
-                        loggedIn: true
+                        loggedIn: true,
+                        snackbarOpen: true,
+                        message:"Logged in successfully!",
                     });
                     that.closeModalHandler();
                     ReactDOM.render(<Home />, document.getElementById('root'));
@@ -177,7 +183,7 @@ class Header extends Component {
             });
 
 
-            xhr.open("POST", "http://localhost:8080//api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
+            xhr.open("POST", "http://localhost:8080/api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
             xhr.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
             xhr.send();
         }
@@ -188,11 +194,38 @@ class Header extends Component {
     }
 
     registerClickHandler = () => {
+
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
         this.state.lastname === "" ? this.setState({ lastnameRequired: "dispBlock" }) : this.setState({ lastnameRequired: "dispNone" });
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
         this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock" }) : this.setState({ registerPasswordRequired: "dispNone" });
         this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
+
+        if (this.state.contactRequired === "dispNone" && this.state.registerPasswordRequired === "dispNone"
+            && this.state.emailRequired === "dispNone" && this.state.firstnameRequired === "dispNone"
+            && this.state.lastnameRequired === "dispNone") {
+
+        
+            let xhrSignup = new XMLHttpRequest();
+            let that = this;
+            xhrSignup.addEventListener("readystatechange", function () {
+                if (this.readyState === 4 && this.status === 200 ) {
+                    that.setState({
+                        registrationSuccess: true,
+                        snackbarOpen: true,
+                        message:"Registered successfully! Please login now!",
+                    });
+                    that.openModalHandler();
+                    ReactDOM.render(<Home />, document.getElementById('root'));
+                }
+            });
+
+            xhrSignup.open("POST", "http://localhost:8080/api/user/signup?firstName="
+            +this.state.firstname+"&lastName="+this.state.lastname+"&email="+this.state.email
+            +"&contactNumber="+this.state.contact+"&password="+this.state.registerPassword);
+            xhrSignup.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
+            xhrSignup.send();
+        }
     }
 
     inputLoginPasswordChangeHandler = (e) => {
@@ -253,14 +286,11 @@ class Header extends Component {
     };
 
     /**
-     * Handler for Closing Menu
+     * Handler for Closing Snackbar
      */
-    handleClose = event => {
-        if (this.anchorEl.contains(event.target)) {
-            return;
-        }
+    snackbarHandleClose = event => {
 
-        this.setState({ open: false });
+        this.setState({ snackbarOpen: false });
 
     };
 
@@ -409,7 +439,18 @@ class Header extends Component {
                             <Button variant="contained" color="primary" onClick={this.registerClickHandler}>SIGNUP</Button>
                         </TabContainer>
                     }
-
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={this.state.snackbarOpen}
+                        onClose={this.snackbarHandleClose}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">{this.state.message}</span>}
+                    />
                 </Modal>
             </div>
         )
