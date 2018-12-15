@@ -27,6 +27,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import ReactDOM from 'react-dom';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
     root: {
@@ -86,6 +88,7 @@ class Checkout extends Component {
         this.state = {
             id : "",
             value:"",
+            location:"",
             tabValue: 0,
             activeStep: 0,
             flat:"",
@@ -108,6 +111,7 @@ class Checkout extends Component {
             categories : [],
             totalCartItemsValue: "700",
             orderNotificationMessage:"",
+            states:[],
             selectedAddress:[
             {
                 "id": 1,
@@ -224,6 +228,8 @@ class Checkout extends Component {
         let data = null;
         let xhr = new XMLHttpRequest();
         let xhr1 = new XMLHttpRequest();
+        let xhr2 = new XMLHttpRequest();
+        let that = this;
         // store relevant details
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
@@ -249,10 +255,25 @@ class Checkout extends Component {
         xhr1.open("GET", "http://localhost:8085/api/payment");
         xhr1.send(data);
 
+        xhr2.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    states : JSON.parse(this.responseText)             
+                });          
+             }
+        });
+
+        xhr2.open("GET", "http://localhost:8085/api/states");
+        xhr2.send(data);
+
     }
 
     tabChangeHandler = (event, tabValue) => {
         this.setState({ tabValue });
+    }
+
+    locationChangeHandler = event => {
+        this.setState({ location: event.target.value });
     }
 
 
@@ -439,9 +460,17 @@ class Checkout extends Component {
                                 </FormControl>
                                 <br /><br />
                                 <FormControl required>
-                                    <InputLabel htmlFor="statename">State</InputLabel>
-                                    <Input id="statename" statename={this.state.statename}
-                                        onChange={this.inputStatePasswordChangeHandler} />
+                                <InputLabel htmlFor="location">State</InputLabel>
+                                <Select
+                                    value={this.state.location}
+                                    onChange={this.locationChangeHandler}
+                                >
+                                    {this.state.states.map(loc => (
+                                        <MenuItem key={"loc" + loc.id} value={loc.stateName}>
+                                            {loc.stateName}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
                                     <FormHelperText className={this.state.stateRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
