@@ -240,7 +240,7 @@ class Details extends Component {
 
     onClickCheckoutButton = state => () => {
         // this.setState({ open: true, ...state });
-       ReactDOM.render(<Checkout />, document.getElementById('root'));
+       ReactDOM.render(<Checkout cartItems={this.state.cartItems} totalCartItemsValue={this.state.totalCartItemsValue}/>, document.getElementById('root'));
     };
 
     handleClose = () => {
