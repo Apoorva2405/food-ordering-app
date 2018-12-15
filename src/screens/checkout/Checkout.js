@@ -551,30 +551,29 @@ class Checkout extends Component {
         </div>
 
             <div className="orderSummary">
-                            <Card>
+                            <Card style={{height:'70%'}}>
                                 <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
+                                    <Typography style={{marginLeft:'40px',fontWeight:'bold',marginBottom:'30px'}} gutterBottom variant="h5" component="h2">
                                         Summary
                                     </Typography>
                                     {this.props.cartItems.map(item => (
                                         <div className="order-body-container" key={"item" + item.id}>
-                                            <div className="div-container">{item.type === 'Veg' &&
+                                            <div className="div-container div-items">{item.type === 'Veg' &&
                                                 <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
                                                 {item.type === 'Non-Veg' &&
-                                                    <FontAwesomeIcon icon="circle" className="non-veg-color"/>}
+                                                    <FontAwesomeIcon icon="circle" className="non-veg-color"/>}   {item.itemName}
                                             </div>
-                                            <div className="div-container"> {item.itemName}</div>
                                             <div className="div-container"> {item.quantity}</div>
                                             <div className="div-container"><FontAwesomeIcon icon="rupee-sign" /> {item.price}</div>
                                         </div>
                                     ))}
                                     <Divider/>
                                     <div className="body-container">
-                                    <span className="div-container">Net Amount </span>
-                                    <span className="div-container"><FontAwesomeIcon icon="rupee-sign" /> {this.props.totalCartItemsValue}</span>
+                                    <span style={{fontWeight:'bold'}} className="div-container div-items">Net Amount </span>
+                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {this.props.totalCartItemsValue}</span>
                                     </div>
                                     <br />
-                                    <Button className="button-container" style={{marginLeft:'140px'}} variant="contained" onClick={this.confirmOrderHandler} color="primary">
+                                    <Button className="button-container" style={{marginLeft:'55px'}} variant="contained" onClick={this.confirmOrderHandler} color="primary">
                                         Place Order
                                     </Button>
                                     <Snackbar

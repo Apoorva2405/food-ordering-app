@@ -52,10 +52,24 @@
     margin-left: 10%;
 }
 
+.price-container {
+    min-width: 50px;
+}
+
+.rupee-container {
+    margin: 8px;
+    margin-left: 24%;
+}
+
+.div-items {
+    min-width: 180px;
+}
+
 .orderSummary {
     float: right;
     width: 500px;
     margin-left: 80px;
+    margin-top: 30px;
 }
 
 .selectionGrid {
@@ -69,5 +83,6 @@
 }
 
 .button-container {
-    margin-left: 120px;
+    margin-left: 70px;
+    width: 350px;
 }
