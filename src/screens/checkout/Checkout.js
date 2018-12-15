@@ -110,24 +110,24 @@ class Checkout extends Component {
             localityRequired: "dispNone",
             incorrectZipcode: "dispNone",
             orderPlaced: "dispNone",
-            incorrectDetails:"",
+            incorrectDetails:"false",
             address : "" ,
             categories : [],
             totalCartItemsValue: "700",
             orderNotificationMessage:"",
             states:[],
             selectedAddress:[
-            {
-                "id": 1,
-                "flatBuilNo": "501/31 Mahalaxmi SRA CHS",
-                "locality": "Prabhadevi",
-                "city": "Mumbai",
-                "zipcode": "400015",
-                "state": {
-                    "id": 21,
-                    "stateName": "Maharashtra"
-                }
-            }
+            // {
+            //     "id": 1,
+            //     "flatBuilNo": "501/31 Mahalaxmi SRA CHS",
+            //     "locality": "Prabhadevi",
+            //     "city": "Mumbai",
+            //     "zipcode": "400015",
+            //     "state": {
+            //         "id": 21,
+            //         "stateName": "Maharashtra"
+            //     }
+            // }
             ],
             cartItems: [
                     {
@@ -218,7 +218,7 @@ class Checkout extends Component {
                     "id": 18,
                     "stateName": "Andhra Pradesh"
                 }
-            },
+            }
             ]
         }
     }
@@ -297,21 +297,33 @@ class Checkout extends Component {
       }
     }
     if (this.state.incorrectDetails === "false") {
+        var savedAddress = {
+                "id": "",
+                "flatBuilNo": this.state.flatBuilNo,
+                "locality": this.state.locality,
+                "city": this.state.city,
+                "zipcode": this.state.zipcode,
+                "state": {
+                    "id": "",
+                    "stateName": this.state.location
+                }
+        }
     this.setState(state => ({
-      activeStep: state.activeStep + 1,
+      selectedAddress: savedAddress,
     }));
     }
-  }
-  else if (this.state.tabValue === 0) {
-    this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
   }
 
   if (this.state.activeStep === 1) {
     this.setState(state => ({
       orderPlaced: "dispBlock",
     }));     
+  }
+
+  if (this.state.incorrectDetails === "false" && this.state.selectedAddress.length !== 0) {
+    this.setState(state => ({
+      activeStep: state.activeStep + 1,
+    })); 
   }
 
 };
@@ -333,7 +345,9 @@ class Checkout extends Component {
   };
 
     inputFlatChangeHandler = (e) => {
-        this.setState({ flat: e.target.value });
+        this.setState({ 
+            flat: e.target.value,
+        });
     }
 
     inputCityChangeHandler = (e) => {
@@ -356,11 +370,32 @@ class Checkout extends Component {
       ReactDOM.render(<Checkout />, document.getElementById('root'));
     }
 
-    iconClickHandler = () => {
-        this.setState({ 
-            addressClass: "selectionGrid" ,
-            iconClass: "green"
-        });
+    iconClickHandler = (address) => {
+        console.log("icon "+address.id);
+        this.state.addresses.map(obj => (
+           obj.id === address.id ?
+            this.setState({
+                selectedAddress: address,
+                addressClass: "selectionGrid" ,
+                iconClass: "green"
+           })
+           :
+           console.log("dint match "+obj.id)
+         ));
+         
+        //  console.log("icon "+this.state.selectedAddress.id);
+        //  if (this.state.selectedAddress.id === address.id) {
+        //      console.log("selection")
+        //      this.setState({
+        //         addressClass: "selectionGrid" ,
+        //         iconClass: "green"
+        //    })        
+        //  }
+        //  else {
+        //       this.setState({
+        //         addressClass: "grid"
+        //    })                
+        //  }
     }
 
     snackBarCloseHandler = () => {
@@ -417,6 +452,7 @@ class Checkout extends Component {
                                 </Tabs>
 
                                 {this.state.tabValue === 0 && 
+                                (this.state.addresses.length !==0 ?
                                 <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                     {this.state.addresses.map(address => (
                                     <GridListTile style={{padding:'20px'}}>
@@ -426,14 +462,19 @@ class Checkout extends Component {
                                         <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.city}</Typography>
                                         <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.state.stateName}</Typography>
                                         <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.zipcode}</Typography>
-                                        <IconButton className={this.state.iconClass} style={{marginLeft:'60%'}} onClick={this.iconClickHandler}>
+                                        <IconButton className={this.state.iconClass} style={{marginLeft:'60%'}} 
+                                        onClick={() => this.iconClickHandler(address)}>
                                             <CheckCircle/>
                                         </IconButton>
                                     </div>
                                     </GridListTile>
                                     ))}
                                     </GridList>
-                                }
+                                    :
+                                    <div style={{marginBottom:'100px'}}>
+                                        <Typography style={{color:'grey',fontSize:'18px'}}>There are no saved addresses! You can save an address using your ‘Profile’ menu option.</Typography>
+                                    </div>
+                                )}
                                 {this.state.tabValue === 1 && 
                                 <div className="dispFlex">
                                 <FormControl required>
