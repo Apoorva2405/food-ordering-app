@@ -548,7 +548,6 @@ class Checkout extends Component {
         </Typography>
         <Button className={classes.button} onClick={this.changeHandler}>Change</Button>
         </div>
-
         </div>
 
             <div className="orderSummary">
@@ -565,7 +564,7 @@ class Checkout extends Component {
                                                     <FontAwesomeIcon icon="circle" className="non-veg-color"/>}
                                             </div>
                                             <div className="div-container"> {item.itemName}</div>
-                                            <div className="div-container">{item.quantity}</div>
+                                            <div className="div-container"> {item.quantity}</div>
                                             <div className="div-container"><FontAwesomeIcon icon="rupee-sign" /> {item.price}</div>
                                         </div>
                                     ))}

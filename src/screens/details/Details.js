@@ -314,16 +314,16 @@ class Details extends Component {
                                     <br/>
                                     {category.items.map(item => (
                                         <div className="itemContainer" key={"item" + item.id}>
-                                            <div className="div-container">{item.type === 'Veg' &&
+                                            <div className="div-container div-items">{item.type === 'Veg' &&
                                                 <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
                                                 {item.type === 'Non-Veg' &&
-                                                    <FontAwesomeIcon icon="circle" className="non-veg-item-color"/>}
+                                                    <FontAwesomeIcon icon="circle" className="non-veg-item-color"/>} {item.itemName}
                                             </div>
-                                            <div className="div-container"> {item.itemName}</div>
+                                            {/*<div className="div-container"> {item.itemName}</div>*/}
 
-                                            <div className="div-container"> <FontAwesomeIcon icon="rupee-sign" />
+                                            <div className="div-container price-container"> <FontAwesomeIcon icon="rupee-sign" />
                                             {item.price}</div>
-                                            <div className="div-container">
+                                            <div className="plus-container">
                                                 <IconButton
                                                     key="close"
                                                     aria-label="Close"
