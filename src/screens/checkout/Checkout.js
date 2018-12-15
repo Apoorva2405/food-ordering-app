@@ -23,6 +23,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 
 const styles = theme => ({
     root: {
@@ -30,6 +32,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper
     },
     gridListMain: {
+        flexWrap: 'nowrap',
         transform: 'translateZ(0)',
     },
     card: {
@@ -60,6 +63,9 @@ const styles = theme => ({
     expandOpen: {
         transform: 'rotate(180deg)',
     },
+    button: {
+        margin: '20px'
+    }
 });
 
 function getSteps() {
@@ -85,6 +91,8 @@ class Checkout extends Component {
             locality:"",
             zipcode:"",
             statename:"",
+            iconClass:"",
+            addressClass:"",
             flatRequired: "dispNone",
             cityRequired: "dispNone",
             stateRequired: "dispNone",
@@ -175,6 +183,17 @@ class Checkout extends Component {
                     "stateName": "Andhra Pradesh"
                 }
             },
+            {
+                "id": 4,
+                "flatBuilNo": "1209B",
+                "locality": "Amarjyothi Layout",
+                "city": "Hyderabad",
+                "zipcode": "401003",
+                "state": {
+                    "id": 18,
+                    "stateName": "Andhra Pradesh"
+                }
+            },
             ]
         }
     }
@@ -197,7 +216,7 @@ class Checkout extends Component {
              }
         });
 
-        xhr.open("GET", "http://localhost:8080/api/address/user");
+        xhr.open("GET", "http://localhost:8085/api/address/user");
         xhr.send(data);
 
         xhr1.addEventListener("readystatechange", function () {
@@ -208,7 +227,7 @@ class Checkout extends Component {
              }
         });
 
-        xhr1.open("GET", "http://localhost:8080/api/payment");
+        xhr1.open("GET", "http://localhost:8085/api/payment");
         xhr1.send(data);
 
     }
@@ -293,37 +312,12 @@ class Checkout extends Component {
        // ReactDOM.render(<Checkout />);
     }
 
-// getStepContent(step) {
-//   switch (step) {
-//     case 0:
-//       `<GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
-//                 {this.state.addresses.map(address => (
-//                 <GridListTile>
-//                     <GridListTileBar
-//                     classes={{
-//                         root: classes.titleBar,
-//                         title: classes.title,
-//                     }}
-//                     />
-//                     <Typography>{address.flatBuilNo}</Typography>
-//                     <Typography>{address.locality}</Typography>
-//                     <Typography>{address.city}</Typography>
-//                     /*<Typography>{address.state}</Typography>*/
-//                     <Typography>{address.zipcode}</Typography>
-//                 </GridListTile>
-//                 ))}
-//         </GridList>`
-//     case 1:
-//       return 'An ad group contains one or more ads which target a shared set of keywords.';
-//     case 2:
-//       return `Try out different ad text to see what brings in the most customers,
-//               and learn how to enhance your ads using features like ad extensions.
-//               If you run into any problems with your ads, find out how to tell if
-//               they're running and how to resolve approval issues.`;
-//     default:
-//       return 'Unknown step';
-//   }
-// }
+    iconClickHandler = () => {
+        this.setState({ 
+            addressClass: "selectionGrid" ,
+            iconClass: "green"
+        });
+    }
 
     render() {
         const { classes } = this.props;
@@ -350,18 +344,23 @@ class Checkout extends Component {
                                 {this.state.tabValue === 0 && 
                                 <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                     {this.state.addresses.map(address => (
-                                    <GridListTile>
-                                        <Typography style={{ fontSize:'20px'}}>{address.flatBuilNo}</Typography>
-                                        <Typography style={{ fontSize:'20px'}}>{address.locality}</Typography>
-                                        <Typography style={{ fontSize:'20px'}}>{address.city}</Typography>
-                                        <Typography style={{ fontSize:'20px'}}>{address.state.stateName}</Typography>
-                                        <Typography style={{ fontSize:'20px'}}>{address.zipcode}</Typography>
+                                    <GridListTile style={{padding:'20px'}}>
+                                    <div className={this.state.addressClass} style={{ padding:'10px' }}>
+                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'5px'}}>{address.flatBuilNo}</Typography>
+                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.locality}</Typography>
+                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.city}</Typography>
+                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.state.stateName}</Typography>
+                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.zipcode}</Typography>
+                                        <IconButton className={this.state.iconClass} style={{marginLeft:'60%'}} onClick={this.iconClickHandler}>
+                                            <CheckCircle/>
+                                        </IconButton>
+                                    </div>
                                     </GridListTile>
                                     ))}
                                     </GridList>
                                 }
                                 {this.state.tabValue === 1 && 
-                                <div>
+                                <div className="dispFlex">
                                 <FormControl required>
                                     <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
                                     <Input id="flat" type="text" flat={this.state.flat}
@@ -476,7 +475,7 @@ class Checkout extends Component {
                                         Summary
                                     </Typography>
                                     {this.state.cartItems.map(item => (
-                                        <div className="main-body-container" key={"item" + item.id}>
+                                        <div className="order-body-container" key={"item" + item.id}>
                                             <div>{item.type === 'Veg' &&
                                                 <i className="fa fa-stop-circle-o veg-item-color" aria-hidden="true"></i>}
                                                 {item.type === 'Non-Veg' &&

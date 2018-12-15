@@ -16,9 +16,18 @@
     display: block;
 }
 
-.main-body-container {
+.dispFlex {
+    width: 800px;
+}
+
+.order-body-container {
     display: flex;
     justify-content: flex-end;
+}
+
+.main-body-container {
+    display: flex;
+    justify-content: space-between;
 }
 
 .body-container {
@@ -33,5 +42,15 @@
 .orderSummary {
     float: right;
     width: 500px;
-    margin-left: 50%;
+    margin-left: 80px;
+}
+
+.selectionGrid {
+    border: 3px solid red;
+    box-shadow: 8px 8px red;
+    border-radius: 5px;
+}
+
+.green {
+    color: green;
 }
