@@ -226,8 +226,6 @@ class Checkout extends Component {
 
     componentWillMount() {
 
-        console.log("cart items "+this.props.cartItems);
-
         // get address data
         let data = null;
         let xhr = new XMLHttpRequest();
@@ -237,26 +235,26 @@ class Checkout extends Component {
         // store relevant details
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                // that.setState({
-                //     addresses : JSON.parse(this.responseText)             
-                // });
-
-               // console.log( JSON.parse(this.responseText) ) ;            
+                that.setState({
+                    addresses : JSON.parse(this.responseText)             
+                });         
              }
         });
 
         xhr.open("GET", "http://localhost:8085/api/address/user");
+        xhr.setRequestHeader("accessToken", "b5fe8f1b-25be-4177-81c5-1f81f0f5b7a7");
         xhr.send(data);
 
         xhr1.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                // that.setState({
-                //     paymentModes : JSON.parse(this.responseText)             
-                // });          
+                that.setState({
+                    paymentModes : JSON.parse(this.responseText)             
+                });         
              }
         });
 
         xhr1.open("GET", "http://localhost:8085/api/payment");
+        xhr1.setRequestHeader("accessToken", "b5fe8f1b-25be-4177-81c5-1f81f0f5b7a7");
         xhr1.send(data);
 
         xhr2.addEventListener("readystatechange", function () {
@@ -455,7 +453,7 @@ class Checkout extends Component {
                                 (this.state.addresses.length !==0 ?
                                 <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                     {this.state.addresses.map(address => (
-                                    <GridListTile style={{padding:'20px'}}>
+                                    <GridListTile maxWidth='100%'>
                                     <div className={this.state.addressClass} style={{ padding:'10px' }}>
                                         <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'5px'}}>{address.flatBuilNo}</Typography>
                                         <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.locality}</Typography>
