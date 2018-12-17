@@ -192,18 +192,17 @@ class Header extends Component {
                     var userDetails = JSON.parse(xhr.responseText);
                     that.setState({
                         loggedIn: true,
-                        snackbarOpen: true,
                         firstname: userDetails.firstName,
-                        message: "Logged in successfully!",
+                        message : "Logged in successfully!",
+                        snackbarOpen: true,
                     });
                     that.closeModalHandler();
-                    ReactDOM.render(<Home />, document.getElementById('root'));
+                    ReactDOM.render(<Home loggedIn = "true"/>, document.getElementById('root'));
                 }
                 else {
                     that.setState({
                         loggedIn: false,
-                        snackbarOpen: true,
-                        message: "Logged in successfully!",
+                        snackbarOpen: false
                     });
                 }
             });
@@ -481,6 +480,18 @@ class Header extends Component {
                                 </AppBar>
                             </MuiThemeProvider>
                         </div>}
+                        <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={this.state.snackbarOpen}
+                        onClose={this.snackbarHandleClose}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">{this.state.message}</span>}
+                    />
                 </header>
                 <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel='Login'
                     onRequestClose={this.closeModalHandler}
