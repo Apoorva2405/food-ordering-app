@@ -327,7 +327,7 @@ class Checkout extends Component {
         const { activeStep } = this.state;
         return (
             <div className="checkout">
-                <Header />
+                <Header showSearch="false"/>
                  <div className="main-body-container">
                     <div>
                     <Stepper activeStep={activeStep} orientation="vertical">
