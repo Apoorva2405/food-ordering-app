@@ -164,6 +164,7 @@ class Header extends Component {
             accessToken: {},
             open: false,
             snackbarOpen: false,
+            showSearch: "true",
         };
     }
 
@@ -376,6 +377,9 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         const { open } = this.state;
+        if (this.props.showSearch === "false"){ 
+        this.state.showSearch = this.props.showSearch;
+    }
         return (
             <div>
                 <header >
@@ -386,7 +390,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
 
-                                        <div className={classes.search}>
+                                        {this.state.showSearch === "true" && <div className={classes.search}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
@@ -398,25 +402,31 @@ class Header extends Component {
                                                     input: classes.inputInput,
                                                 }} onChange={this.inputChangeHandler}
                                             />
-                                        </div>
-                                        <div className="login-button">
+                                        </div>}
+                                        {this.state.showSearch === "true" && <div className="login-button">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
                                         </Button>
-                                        </div>
+                                        </div>}
+                                        {this.state.showSearch === "false" && <div className="login-button2">
+                                            <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
+                                                <ProfileIcon className={classes.prfileicon} />
+                                                Login
+                                        </Button>
+                                        </div>}
                                     </Toolbar>
                                 </AppBar>
                             </MuiThemeProvider>
                         </div>}
-                    {this.state.loggedIn &&
+                    {this.state.loggedIn && 
                         <div className={classes.root}>
                             <MuiThemeProvider theme={theme}>
                                 <AppBar position="static" color='primary'>
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
                                         <div className={classes.grow} />
-                                        <div className={classes.searchLoggedIn}>
+                                        {this.state.showSearch === "true" && <div className={classes.searchLoggedIn}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
@@ -428,7 +438,7 @@ class Header extends Component {
                                                     input: classes.inputInput,
                                                 }} onChange={this.inputChangeHandler}
                                             />
-                                        </div>
+                                        </div>}
                                         {/**Menu Button Code */}
                                         <IconButton buttonRef={node => {
                                             this.anchorEl = node;
