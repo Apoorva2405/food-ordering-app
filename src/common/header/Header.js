@@ -197,7 +197,7 @@ class Header extends Component {
                         snackbarOpen: true,
                     });
                     that.closeModalHandler();
-                    ReactDOM.render(<Home loggedIn = "true"/>, document.getElementById('root'));
+                    ReactDOM.render(<Home />, document.getElementById('root'));
                 }
                 else {
                     that.setState({
