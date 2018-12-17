@@ -338,7 +338,7 @@ class Checkout extends Component {
                                 <StepContent>
                                 {index === 0 &&
                                 <div>
-                                <Tabs className="tabs" value={this.state.tabValue} onChange={this.tabChangeHandler}>
+                                <Tabs className="addTabs" value={this.state.tabValue} onChange={this.tabChangeHandler}>
                                     <Tab label="EXISTING ADDRESS" />
                                     <Tab label="NEW ADDRESS" />
                                 </Tabs>
