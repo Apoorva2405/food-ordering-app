@@ -221,9 +221,6 @@ class Header extends Component {
                         });
                         that.closeModalHandler();
 
-                        this.props.history.push({
-                                pathname: '/home'
-                            })
                     }
                     else if (this.status === 401) {
                         that.setState({
@@ -467,10 +464,6 @@ class Header extends Component {
         const { classes } = this.props;
         const { open } = this.state;
 
-        if (this.props.showSearch === "false") {
-            this.setState({ showSearch: this.props.showSearch });
-        }
-
         return (
             <div>
                 <header >
@@ -481,7 +474,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
 
-                                        {this.state.showSearch === "true" && <div className={classes.search}>
+                                        {this.props.showSearch === "true" && <div className={classes.search}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
@@ -494,13 +487,13 @@ class Header extends Component {
                                                 }} onChange={this.inputChangeHandler}
                                             />
                                         </div>}
-                                        {this.state.showSearch === "true" && <div className="login-button">
+                                        {this.props.showSearch === "true" && <div className="login-button">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
                                         </Button>
                                         </div>}
-                                        {this.state.showSearch === "false" && <div className="login-button2">
+                                        {this.props.showSearch === "false" && <div className="login-button2">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
@@ -517,7 +510,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
                                         <div className={classes.grow} />
-                                        {this.state.showSearch === "true" && <div className={classes.searchLoggedIn}>
+                                        {this.props.showSearch === "true" && <div className={classes.searchLoggedIn}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
