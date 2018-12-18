@@ -179,7 +179,6 @@ class Header extends Component {
         this.setState({
             query: e.target.value
         });
-        console.log("query " + e.target.value);
         this.props.searchClickHandler(e.target.value);
     };
 
@@ -187,16 +186,12 @@ class Header extends Component {
         this.state.contactNo === "" ? this.setState({ contactNoRequired: "dispBlock", contactNoMessage: "required" }) : this.setState({ contactNoRequired: "dispNone", contactNoMessage: "" });
         this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock", invalidDataMessage: "required" }) : this.setState({ loginPasswordRequired: "dispNone", invalidDataMessage: "" });
         // If Username & Password not null then only send the request
-        console.log(this.state.contactNoRequired);
-        console.log(this.state.contactNoMessage);
 
         if (this.state.contactNo !== "" && this.state.loginPassword !== "") {
 
 
             var number_pattern = [0 - 9];
             if (!this.state.contactNo.match(number_pattern) && this.state.contactNo.length !== 10) {
-
-                console.log("invalid number");
 
                 this.setState({
                     contactNoRequired: "dispBlock",
@@ -214,16 +209,13 @@ class Header extends Component {
                         sessionStorage.setItem('access-token', xhr.getResponseHeader("access-token"));
                         var userDetails = JSON.parse(xhr.responseText);
 
-                        // that.props.history.push({
-                        //         pathname: '/home'
-                        //     })
-
                         that.setState({
                             loggedIn: true,
                             firstname: userDetails.firstName,
                             message: "Logged in successfully!",
                             snackbarOpen: true,
                         });
+                        sessionStorage.setItem('firstname', userDetails.firstName);
                         that.closeModalHandler();
                     }
                     else if (this.status === 401) {
@@ -264,16 +256,6 @@ class Header extends Component {
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock", emailMessage: "required" }) : this.setState({ emailRequired: "dispNone", emailMessage: "" });
         this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock", passwordMessage: "required" }) : this.setState({ registerPasswordRequired: "dispNone", passwordMessage: "" });
         this.state.contact === "" ? this.setState({ contactRequired: "dispBlock", contactMessage: "required" }) : this.setState({ contactRequired: "dispNone", contactMessage: "" });
-
-        console.log(this.state.firstname);
-        console.log(this.state.email);
-        console.log(this.state.registerPassword);
-        console.log(this.state.contact);
-
-        console.log(this.state.firstnameRequired);
-        console.log(this.state.emailRequired);
-        console.log(this.state.registerPasswordRequired);
-        console.log(this.state.contactRequired);
 
         if (this.props.showSearch === "false") {
             this.setState({ showSearch: this.props.showSearch });
@@ -316,10 +298,6 @@ class Header extends Component {
 
             }
 
-            console.log(this.state.contactMessage);
-            console.log(this.state.emailMessage);
-            console.log(this.state.passwordMessage);
-
             if ((this.state.contactMessage === "required" && this.state.passwordMessage === "required"
                 && this.state.emailMessage === "required") ||
                 (this.state.contactMessage === "" && this.state.passwordMessage === ""
@@ -334,7 +312,6 @@ class Header extends Component {
                             message: "Registered successfully! Please login now!",
                         });
                         that.openModalHandler();
-                        //ReactDOM.render(<Home />, document.getElementById('root'));
                     } else if (this.readyState === 4 && this.status === 400) {
                         that.setState({
                             contactRequired: "dispBlock",
@@ -466,11 +443,6 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         const { open } = this.state;
-
-        // if (this.props.showSearch === "false") {
-        //     this.setState({ showSearch: this.props.showSearch });
-        // }
-
         return (
             <div>
                 <header >
@@ -481,7 +453,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
 
-                                        {this.state.showSearch === "true" && <div className={classes.search}>
+                                        {this.props.showSearch === "true" && <div className={classes.search}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
@@ -494,13 +466,13 @@ class Header extends Component {
                                                 }} onChange={this.inputChangeHandler}
                                             />
                                         </div>}
-                                        {this.state.showSearch === "true" && <div className="login-button">
+                                        {this.props.showSearch === "true" && <div className="login-button">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
                                         </Button>
                                         </div>}
-                                        {this.state.showSearch === "false" && <div className="login-button2">
+                                        {this.props.showSearch === "false" && <div className="login-button2">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
@@ -517,7 +489,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
                                         <div className={classes.grow} />
-                                        {this.state.showSearch === "true" && <div className={classes.searchLoggedIn}>
+                                        {this.props.showSearch === "true" && <div className={classes.searchLoggedIn}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
@@ -573,7 +545,8 @@ class Header extends Component {
                                             </Popper>
                                         </div>
                                         <div className={classes.text}>
-                                            <p>{this.state.firstname}</p>
+                                            {/*<p>{this.state.firstname}</p>*/}
+                                            <p>{sessionStorage.getItem("firstname")}</p>
                                         </div>
                                     </Toolbar>
                                 </AppBar>
