@@ -220,7 +220,7 @@ class Header extends Component {
                             snackbarOpen: true,
                         });
                         that.closeModalHandler();
-                        // ReactDOM.render(<Home />, document.getElementById('root'));
+
                         this.props.history.push({
                                 pathname: '/home'
                             })
@@ -466,9 +466,11 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         const { open } = this.state;
+
         if (this.props.showSearch === "false") {
             this.setState({ showSearch: this.props.showSearch });
         }
+
         return (
             <div>
                 <header >

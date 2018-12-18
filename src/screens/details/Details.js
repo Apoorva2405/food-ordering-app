@@ -173,7 +173,7 @@ class Details extends Component {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({
-                    restaurantDetails: JSON.parse(this.responseText)
+                   // restaurantDetails: JSON.parse(this.responseText)
                 });
             }
         });
