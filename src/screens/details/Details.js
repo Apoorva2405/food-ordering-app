@@ -173,12 +173,12 @@ class Details extends Component {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({
-                  //  restaurantDetails: JSON.parse(this.responseText)
+                    restaurantDetails: JSON.parse(this.responseText)
                 });
             }
         });
         /**Extracted Dynamically passed restaurantId from params */ 
-        xhr.open("GET", "http://localhost:8085/api/restaurant/" + this.props.id);
+        xhr.open("GET", "http://localhost:8080/api/restaurant/" + this.props.match.params.restaurantID);
         xhr.send();
     } 
 
@@ -343,7 +343,7 @@ class Details extends Component {
                                         <Badge badgeContent={this.state.cartItems.length} color="primary" classes={{ badge: classes.margin }}>
                                             <ShoppingCart />
                                         </Badge> 
-                                        <span classname="cart-display"> MY CART</span>
+                                        <span className="cart-display"> MY CART</span>
                                     </Typography>
                                     {this.state.cartItems.map(item => (
                                         <div key={"item" + item.id}>
