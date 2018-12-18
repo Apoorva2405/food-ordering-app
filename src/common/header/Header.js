@@ -26,6 +26,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import IconButton from '@material-ui/core/IconButton';
 import Profile from '../../screens/profile/Profile';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 const styles = theme => ({
@@ -213,6 +214,10 @@ class Header extends Component {
                         sessionStorage.setItem('access-token', xhr.getResponseHeader("access-token"));
                         var userDetails = JSON.parse(xhr.responseText);
 
+                        // that.props.history.push({
+                        //         pathname: '/home'
+                        //     })
+
                         that.setState({
                             loggedIn: true,
                             firstname: userDetails.firstName,
@@ -220,10 +225,6 @@ class Header extends Component {
                             snackbarOpen: true,
                         });
                         that.closeModalHandler();
-
-                        this.props.history.push({
-                                pathname: '/home'
-                            })
                     }
                     else if (this.status === 401) {
                         that.setState({
@@ -246,7 +247,7 @@ class Header extends Component {
                 });
 
 
-                xhr.open("POST", "http://localhost:8080/api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
+                xhr.open("POST", "http://localhost:8085/api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
                 xhr.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
                 xhr.send();
             }
@@ -273,6 +274,10 @@ class Header extends Component {
         console.log(this.state.emailRequired);
         console.log(this.state.registerPasswordRequired);
         console.log(this.state.contactRequired);
+
+        if (this.props.showSearch === "false") {
+            this.setState({ showSearch: this.props.showSearch });
+        }
         if (this.state.contact !== "" && this.state.registerPassword !== ""
             && this.state.email !== "" && this.state.firstname !== "") {
 
@@ -339,7 +344,7 @@ class Header extends Component {
                     }
                 });
 
-                xhrSignup.open("POST", "http://localhost:8080/api/user/signup?firstName="
+                xhrSignup.open("POST", "http://localhost:8085/api/user/signup?firstName="
                     + this.state.firstname + "&lastName=" + this.state.lastname + "&email=" + this.state.email
                     + "&contactNumber=" + this.state.contact + "&password=" + this.state.registerPassword);
                 xhrSignup.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
@@ -425,11 +430,6 @@ class Header extends Component {
             loggedIn: false,
             open: false
         });
-
-        // Redirecting to Login page
-        this.props.history.push({
-                pathname: '/home'
-            })
     }
 
     openModalHandler = () => {
@@ -467,9 +467,9 @@ class Header extends Component {
         const { classes } = this.props;
         const { open } = this.state;
 
-        if (this.props.showSearch === "false") {
-            this.setState({ showSearch: this.props.showSearch });
-        }
+        // if (this.props.showSearch === "false") {
+        //     this.setState({ showSearch: this.props.showSearch });
+        // }
 
         return (
             <div>
@@ -554,17 +554,15 @@ class Header extends Component {
                                                             <MenuList className={classes.menuList}>
 
                                                                 {/* On clicking login , calling my account handler */}
-                                                                <MenuItem className={classes.menuitem} onClick={this.myAccountHandler}>
-                                                                    My Profile
-                                {/*<Link style={{ textDecoration: 'none', color: 'black' }} to="/profile">My Account</Link>
-                                */}
+                                                                <MenuItem className={classes.menuitem}>
+                                                                <Link style={{ textDecoration: 'none', color: 'black' }} to="/profile">My Profile</Link>
+                                
                                                                 </MenuItem>
 
                                                                 {/* On clicking logout, calling logout handler */}
-                                                                <MenuItem className={classes.menuitem} onClick={this.logoutHandler}>
-                                                                    Logout
-                                {/*<Link style={{ textDecoration: 'none', color: 'black' }} onClick={this.logoutHandler} to="/">Logout</Link>
-                                */}
+                                                                <MenuItem className={classes.menuitem}>
+                                                                <Link style={{ textDecoration: 'none', color: 'black' }} onClick={this.logoutHandler} to="/">Logout</Link>
+                                
                                                                 </MenuItem>
 
                                                             </MenuList>
