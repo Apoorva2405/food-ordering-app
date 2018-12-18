@@ -293,7 +293,7 @@ class Details extends Component {
                                 </Typography>
                                 <Typography variant="h6">{this.state.address.locality}</Typography>
                                 <br />
-                                <Typography variant="h7" gutterBottom>
+                                <Typography variant="h8" gutterBottom>
                                     {this.state.categories.map(category => (
                                         <span key={"category" + category.id}>{category.categoryName}, </span>
                                     ))}
