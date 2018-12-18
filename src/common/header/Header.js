@@ -16,7 +16,6 @@ import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import ProfileIcon from '@material-ui/icons/AccountCircle';
-import Home from '../../screens/home/Home';
 import Snackbar from '@material-ui/core/Snackbar';
 import ReactDOM from 'react-dom';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -221,7 +220,10 @@ class Header extends Component {
                             snackbarOpen: true,
                         });
                         that.closeModalHandler();
-                        ReactDOM.render(<Home />, document.getElementById('root'));
+                        // ReactDOM.render(<Home />, document.getElementById('root'));
+                        this.props.history.push({
+                                pathname: '/home'
+                            })
                     }
                     else if (this.status === 401) {
                         that.setState({
@@ -425,7 +427,9 @@ class Header extends Component {
         });
 
         // Redirecting to Login page
-        ReactDOM.render(<Home />, document.getElementById('root'));
+        this.props.history.push({
+                pathname: '/home'
+            })
     }
 
     openModalHandler = () => {
@@ -462,9 +466,9 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         const { open } = this.state;
-        /*if (this.props.showSearch === "false") {
+        if (this.props.showSearch === "false") {
             this.setState({ showSearch: this.props.showSearch });
-        }*/
+        }
         return (
             <div>
                 <header >
@@ -475,7 +479,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
 
-                                        {this.props.showSearch === "true" && <div className={classes.search}>
+                                        {this.state.showSearch === "true" && <div className={classes.search}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
@@ -488,13 +492,13 @@ class Header extends Component {
                                                 }} onChange={this.inputChangeHandler}
                                             />
                                         </div>}
-                                        {this.props.showSearch === "true" && <div className="login-button">
+                                        {this.state.showSearch === "true" && <div className="login-button">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
                                         </Button>
                                         </div>}
-                                        {this.props.showSearch === "false" && <div className="login-button2">
+                                        {this.state.showSearch === "false" && <div className="login-button2">
                                             <Button className={classes.prfileicon} variant="contained" size="medium" color="default" onClick={this.openModalHandler}>
                                                 <ProfileIcon className={classes.prfileicon} />
                                                 Login
@@ -511,7 +515,7 @@ class Header extends Component {
                                     <Toolbar>
                                         <img src={logo} className={classes.logo} alt="FoodOrderingApp" />
                                         <div className={classes.grow} />
-                                        {this.props.showSearch === "true" && <div className={classes.searchLoggedIn}>
+                                        {this.state.showSearch === "true" && <div className={classes.searchLoggedIn}>
                                             <div className={classes.searchIcon}>
                                                 <SearchIcon />
                                             </div>
