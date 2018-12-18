@@ -16,8 +16,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import Checkout from '../../screens/checkout/Checkout';
-import ReactDOM from 'react-dom';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 import './Details.css';
@@ -178,6 +176,7 @@ class Details extends Component {
                 console.log(JSON.parse(this.responseText));
                 console.log("address"  + JSON.parse(this.responseText).address  );
                 that.setState({
+                  
                   restaurantDetails: JSON.parse(this.responseText),
                   address : JSON.parse(this.responseText).address, 
                   categories: JSON.parse(this.responseText).categories,
@@ -197,7 +196,7 @@ class Details extends Component {
 
 
         /**Extracted Dynamically passed restaurantId from params */ 
-        xhr.open("GET", "http://localhost:8080/api/restaurant/" + this.props.id);
+        xhr.open("GET", "http://localhost:8080/api/restaurant/" + this.props.match.params.restaurantID);
         xhr.send();
     } 
 
@@ -258,8 +257,10 @@ class Details extends Component {
     }
 
     onClickCheckoutButton = state => () => {
-        // this.setState({ open: true, ...state });
-       ReactDOM.render(<Checkout cartItems={this.state.cartItems} totalCartItemsValue={this.state.totalCartItemsValue}/>, document.getElementById('root'));
+        this.props.history.push({
+                pathname: '/checkout',
+                state: { cartItems: this.state.cartItems, totalCartItemsValue: this.state.totalCartItemsValue}
+            })
     };
 
     handleClose = () => {
@@ -276,7 +277,7 @@ class Details extends Component {
 
         return (
             <div>
-                <Header />
+                <Header showSearch="false"/>
                 <div>
                     <div className="details-header-bg">
                         <div className="details-restImage">
@@ -363,7 +364,7 @@ class Details extends Component {
                                         <Badge badgeContent={this.state.cartItems.length} color="primary" classes={{ badge: classes.margin }}>
                                             <ShoppingCart />
                                         </Badge> 
-                                        <span classname="cart-display"> MY CART</span>
+                                        <span className="cart-display"> MY CART</span>
                                     </Typography>
                                     {this.state.cartItems.map(item => (
                                         <div key={"item" + item.id}>
@@ -403,7 +404,8 @@ class Details extends Component {
                                     <br />
                                     <br />
                                     <Button variant="contained" color="primary"
-                                        onClick={this.onClickCheckoutButton({ vertical: 'bottom', horizontal: 'left' })}>
+                                        onClick={this.onClickCheckoutButton({ vertical: 'bottom', horizontal: 'left' })}
+                                        >
                                         CHECKOUT
                                     </Button>
                                     <Snackbar

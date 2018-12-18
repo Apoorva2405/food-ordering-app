@@ -119,79 +119,18 @@ class Checkout extends Component {
             states:[],
             selectedAddress:[],
             cartItems: [],
-            paymentModes: [
-                    {
-                        "id": 1,
-                        "paymentName": "Cash on Delivery"
-                    },
-                    {
-                        "id": 2,
-                        "paymentName": "Wallet"
-                    },
-                    {
-                        "id": 3,
-                        "paymentName": "Net Banking"
-                    },
-                    {
-                        "id": 4,
-                        "paymentName": "COD"
-                    },
-                    {
-                        "id": 5,
-                        "paymentName": "Debit/Credit Card"
-                    }
-                    ],
-            addresses: [
-            {
-                "id": 1,
-                "flatBuilNo": "501/31 Mahalaxmi SRA CHS",
-                "locality": "Prabhadevi",
-                "city": "Mumbai",
-                "zipcode": "400015",
-                "state": {
-                    "id": 21,
-                    "stateName": "Maharashtra"
-                }
-            },
-            {
-                "id": 2,
-                "flatBuilNo": "#501",
-                "locality": "Bellandur",
-                "city": "Bangalore",
-                "zipcode": "560087",
-                "state": {
-                    "id": 20,
-                    "stateName": "Karnataka"
-                }
-            },
-            {
-                "id": 3,
-                "flatBuilNo": "1209B",
-                "locality": "Amarjyothi Layout",
-                "city": "Hyderabad",
-                "zipcode": "401003",
-                "state": {
-                    "id": 18,
-                    "stateName": "Andhra Pradesh"
-                }
-            },
-            {
-                "id": 4,
-                "flatBuilNo": "1209B",
-                "locality": "Amarjyothi Layout",
-                "city": "Hyderabad",
-                "zipcode": "401003",
-                "state": {
-                    "id": 18,
-                    "stateName": "Andhra Pradesh"
-                }
-            }
-            ]
+            paymentModes: [],
+            addresses: []
         }
     }
     
 
     componentWillMount() {
+
+        if (sessionStorage.getItem("access-token") == null) {
+            this.props.history.push('/');
+        }
+        else {
         // get address data
         let data = null;
         let xhr = new XMLHttpRequest();
@@ -201,38 +140,39 @@ class Checkout extends Component {
         // store relevant details
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                // that.setState({
-                //     addresses : JSON.parse(this.responseText)             
-                // });
-
-               // console.log( JSON.parse(this.responseText) ) ;            
+                that.setState({
+                    addresses : JSON.parse(this.responseText)             
+                });         
              }
         });
 
         xhr.open("GET", "http://localhost:8085/api/address/user");
+        xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
         xhr.send(data);
 
         xhr1.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                // that.setState({
-                //     paymentModes : JSON.parse(this.responseText)             
-                // });          
+                that.setState({
+                    paymentModes : JSON.parse(this.responseText)             
+                });         
              }
         });
 
         xhr1.open("GET", "http://localhost:8085/api/payment");
+        xhr1.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
         xhr1.send(data);
 
         xhr2.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({
                     states : JSON.parse(this.responseText)             
-                });          
+                });
              }
         });
 
         xhr2.open("GET", "http://localhost:8085/api/states");
         xhr2.send(data);
+        }
 
     }
 
@@ -281,10 +221,11 @@ class Checkout extends Component {
   if (this.state.activeStep === 1 && this.state.value!=="") {
     this.setState(state => ({
       orderPlaced: "dispBlock",
+      activeStep: state.activeStep + 1
     }));     
   }
 
-  if (this.state.incorrectDetails === "false" && this.state.selectedAddress.length !== 0) {
+  if (this.state.activeStep !== 1 && this.state.incorrectDetails === "false" && this.state.selectedAddress.length !== 0) {
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     })); 
@@ -386,7 +327,7 @@ class Checkout extends Component {
         const { activeStep } = this.state;
         return (
             <div className="checkout">
-                <Header />
+                <Header showSearch="false"/>
                  <div className="main-body-container">
                     <div>
                     <Stepper activeStep={activeStep} orientation="vertical">
@@ -397,7 +338,7 @@ class Checkout extends Component {
                                 <StepContent>
                                 {index === 0 &&
                                 <div>
-                                <Tabs className="tabs" value={this.state.tabValue} onChange={this.tabChangeHandler}>
+                                <Tabs className="addTabs" value={this.state.tabValue} onChange={this.tabChangeHandler}>
                                     <Tab label="EXISTING ADDRESS" />
                                     <Tab label="NEW ADDRESS" />
                                 </Tabs>
@@ -406,7 +347,7 @@ class Checkout extends Component {
                                 (this.state.addresses.length !==0 ?
                                 <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                     {this.state.addresses.map((address, i) => (
-                                    <GridListTile style={{padding:'20px'}}>
+                                    <GridListTile key={i} style={{padding:'20px'}}>
                                     <div id ={i} key={i} className={this.state.selectedIndex === i ? 'selectionGrid' : 'grid'} 
                                     style={{ padding:'10px' }}>
                                         <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'5px'}}>{address.flatBuilNo}</Typography>
@@ -504,7 +445,7 @@ class Checkout extends Component {
                                     >
                                     {this.state.paymentModes.map((payment) => {
                                         return (
-                                        <FormControlLabel value={payment.paymentName} control={<Radio />} label={payment.paymentName} />
+                                        <FormControlLabel key={payment.id} value={payment.paymentName} control={<Radio />} label={payment.paymentName} />
                                         )
                                     })}
                                     </RadioGroup>
@@ -550,7 +491,7 @@ class Checkout extends Component {
                                     <Typography style={{marginLeft:'40px',fontWeight:'bold',marginBottom:'30px'}} gutterBottom variant="h5" component="h2">
                                         Summary
                                     </Typography>
-                                    {this.props.cartItems.map(item => (
+                                    {this.props.location.state.cartItems.map(item => (
                                         <div className="order-body-container" key={"item" + item.id}>
                                             <div className="div-container div-items">{item.type === 'Veg' &&
                                                 <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
@@ -564,7 +505,7 @@ class Checkout extends Component {
                                     <Divider/>
                                     <div className="body-container">
                                     <span style={{fontWeight:'bold'}} className="div-container div-items">Net Amount </span>
-                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {this.props.totalCartItemsValue}</span>
+                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {this.props.location.state.totalCartItemsValue}</span>
                                     </div>
                                     <br />
                                     <Button className="button-container" style={{marginLeft:'55px'}} variant="contained" onClick={this.confirmOrderHandler} color="primary">
