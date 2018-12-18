@@ -179,8 +179,8 @@ class Details extends Component {
                 console.log("address"  + JSON.parse(this.responseText).address  );
                 that.setState({
                   restaurantDetails: JSON.parse(this.responseText),
-                 // address : JSON.parse(this.responseText).address 
-                  
+                  address : JSON.parse(this.responseText).address, 
+                  categories: JSON.parse(this.responseText).categories,
                   /*
                       date: moment(Number(dateReceived)).format("DD/MM/YYYY hh:mm:ss"),
                     uploaded_pics: JSON.parse(this.responseText).data,
@@ -290,10 +290,10 @@ class Details extends Component {
                                 <Typography gutterBottom variant="h4" component="h2">
                                     {restaurantDetails.restaurantName}
                                 </Typography>
-                                <Typography  variant="h8">{restaurantDetails.address.locality}</Typography>  
+                                <Typography  variant="h8">{this.state.address.locality}</Typography>  
                                 <br />
                                 <Typography variant="h6" gutterBottom>
-                                    {restaurantDetails.categories.map(category => (
+                                    {this.state.categories.map(category => (
                                         <span key={"category" + category.id}>{category.categoryName}, </span>
                                     ))}
                                 </Typography>
@@ -327,7 +327,7 @@ class Details extends Component {
                     </div>
                     <div className="menu-cart-items">
                         <div className="menu-items">
-                            {restaurantDetails.categories.map(category => (
+                            {this.state.categories.map(category => (
                                 <div key={"categoryItems" + category.id}>
                                     <h3 className="category-name">{category.categoryName} </h3>
                                         <Divider />
