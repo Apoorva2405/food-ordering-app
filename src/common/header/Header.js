@@ -221,7 +221,7 @@ class Header extends Component {
                             snackbarOpen: true,
                         });
                         that.closeModalHandler();
-                        ReactDOM.render(<Home />, document.getElementById('root'));
+                        //ReactDOM.render(<Home />, document.getElementById('root'));
                     }
                     else if (this.status === 401) {
                         that.setState({
@@ -462,9 +462,6 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         const { open } = this.state;
-        /*if (this.props.showSearch === "false") {
-            this.setState({ showSearch: this.props.showSearch });
-        }*/
         return (
             <div>
                 <header >
