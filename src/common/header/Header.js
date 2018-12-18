@@ -239,7 +239,7 @@ class Header extends Component {
                 });
 
 
-                xhr.open("POST", "http://localhost:8085/api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
+                xhr.open("POST", "http://localhost:8080/api/user/login?contactNumber=" + this.state.contactNo + "&password=" + this.state.loginPassword);
                 xhr.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
                 xhr.send();
             }
@@ -257,9 +257,6 @@ class Header extends Component {
         this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "dispBlock", passwordMessage: "required" }) : this.setState({ registerPasswordRequired: "dispNone", passwordMessage: "" });
         this.state.contact === "" ? this.setState({ contactRequired: "dispBlock", contactMessage: "required" }) : this.setState({ contactRequired: "dispNone", contactMessage: "" });
 
-        if (this.props.showSearch === "false") {
-            this.setState({ showSearch: this.props.showSearch });
-        }
         if (this.state.contact !== "" && this.state.registerPassword !== ""
             && this.state.email !== "" && this.state.firstname !== "") {
 
@@ -321,7 +318,7 @@ class Header extends Component {
                     }
                 });
 
-                xhrSignup.open("POST", "http://localhost:8085/api/user/signup?firstName="
+                xhrSignup.open("POST", "http://localhost:8080/api/user/signup?firstName="
                     + this.state.firstname + "&lastName=" + this.state.lastname + "&email=" + this.state.email
                     + "&contactNumber=" + this.state.contact + "&password=" + this.state.registerPassword);
                 xhrSignup.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
