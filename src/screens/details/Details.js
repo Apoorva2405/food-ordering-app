@@ -267,10 +267,10 @@ class Details extends Component {
                                     ))}
                                     <div className="body-container">
                                     <span style={{fontWeight:'bold'}} className="div-container div-items">TOTAL AMOUNT </span>   
-                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {this.state.totalCartItemsValue}</span>
+                                    <span className="rupee-cart-container"><FontAwesomeIcon icon="rupee-sign" /> {this.state.totalCartItemsValue}</span>
                                     </div>
                                     <br/>
-                                    <Button  className="button-container" style={{marginLeft:'55px'}} variant="contained" color="primary"
+                                    <Button  className="cart-button" style={{marginLeft:'55px'}} variant="contained" color="primary"
                                         onClick={this.onClickCheckoutButton({ vertical: 'bottom', horizontal: 'left' })}
                                     >
                                         CHECKOUT
