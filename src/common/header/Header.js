@@ -399,21 +399,24 @@ class Header extends Component {
     logoutHandler = event => {
         // Removing accesstoken in session storage on clicking logout 
         var acToken = sessionStorage.getItem("access-token");
+        sessionStorage.removeItem("access-token");
+
+        this.setState({
+            loggedIn: false,
+            open: false,
+        });
+
         let xhr = new XMLHttpRequest();
-        let that = this;
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                sessionStorage.removeItem("access-token");
-                that.setState({
-                    loggedIn: false,
-                    open: false,
-                });
+                
             }
         });
         xhr.open("PUT","http://localhost:8080/api/user/logout?accessToken="+acToken);
         xhr.setRequestHeader("Content-Type", "application/jason;CharSet=UTF-8");
         xhr.setRequestHeader("accessToken",acToken);
         xhr.send();
+
     }
 
     openModalHandler = () => {
